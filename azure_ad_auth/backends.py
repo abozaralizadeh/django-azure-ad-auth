@@ -1,3 +1,4 @@
+import logging
 from .utils import get_token_payload, get_token_payload_email, get_login_url, get_logout_url, RESPONSE_MODE
 from base64 import urlsafe_b64encode
 from django.conf import settings
@@ -12,12 +13,14 @@ except ImportError:
         return User
 from hashlib import sha1
 
+logger = logging.getLogger('Azure AD Auth')
 
 class AzureActiveDirectoryBackend(object):
     USER_CREATION = getattr(settings, 'AAD_USER_CREATION', True)
     USER_MAPPING = getattr(settings, 'AAD_USER_MAPPING', {})
     USER_STATIC_MAPPING = getattr(settings, 'AAD_USER_STATIC_MAPPING', {})
     GROUP_MAPPING = getattr(settings, 'AAD_GROUP_MAPPING', {})
+    EMAIL_FIELD = getattr(settings, 'AAD_EMAIL_FIELD', 'upn')
     RESPONSE_MODE = RESPONSE_MODE
 
     supports_anonymous_user = False
@@ -42,9 +45,10 @@ class AzureActiveDirectoryBackend(object):
             return None
 
         payload = get_token_payload(token=token, nonce=nonce)
-        email = get_token_payload_email(payload)
+        email = get_token_payload_email(payload, EMAIL_FIELD)
 
         if email is None:
+            logger.error(EMAIL_FIELD + 'field not found!')
             return None
 
         email = email.lower()
