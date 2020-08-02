@@ -71,3 +71,9 @@ Map static values to user fields on creation.
 **default:** `{}`
 
 Map group ids to group names for user permissions.
+
+### AAD_GROUP_STATIC_MAPPING
+
+**default:** `set()`
+
+Map static groups to user. 
