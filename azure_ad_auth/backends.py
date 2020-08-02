@@ -20,6 +20,7 @@ class AzureActiveDirectoryBackend(object):
     USER_MAPPING = getattr(settings, 'AAD_USER_MAPPING', {})
     USER_STATIC_MAPPING = getattr(settings, 'AAD_USER_STATIC_MAPPING', {})
     GROUP_MAPPING = getattr(settings, 'AAD_GROUP_MAPPING', {})
+    GROUP_STATIC_MAPPING = getattr(settings, 'AAD_GROUP_STATIC_MAPPING', set())
     EMAIL_FIELD = getattr(settings, 'AAD_EMAIL_FIELD', 'upn')
     RESPONSE_MODE = RESPONSE_MODE
 
@@ -80,6 +81,12 @@ class AzureActiveDirectoryBackend(object):
             return None
 
     def add_user_to_group(self, user, payload):
+        for sg in self.GROUP_STATIC_MAPPING:
+            try:
+                static_group = Group.objects.get(name=sg)
+                user.groups.add(static_group)
+            except ObjectDoesNotExist:
+                pass
         if user is not None and 'groups' in payload:
             for groupid in payload['groups']:
                 if groupid not in self.GROUP_MAPPING:
