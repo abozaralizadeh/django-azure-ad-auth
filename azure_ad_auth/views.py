@@ -41,15 +41,16 @@ def auth(request):
 def complete(request):
     backend = AzureActiveDirectoryBackend()
     method = 'GET' if backend.RESPONSE_MODE == 'fragment' else 'POST'
-    #original_state = request.session.get('state')
+    original_state = request.session.get('state')
     state = getattr(request, method).get('state')
-    if state:
+    if original_state == state:
         token = getattr(request, method).get('id_token')
-        #nonce = request.session.get('nonce')
-        user = backend.authenticate(request=request, token=token, nonce=state)
+        nonce = request.session.get('nonce')
+        user = backend.authenticate(request=request, token=token, nonce=nonce)
         if user is not None:
             login(request, user)
             return HttpResponseRedirect(get_login_success_url(request))
+    print("Log: nonce=" + nonce + "original_state=" + original_state)
     return HttpResponseRedirect('failure')
 
 
