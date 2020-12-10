@@ -39,8 +39,9 @@ def get_login_url(authority=AUTHORITY, response_type=RESPONSE_TYPE, response_mod
     if always_authenticate:
         param_dict['prompt'] = 'login'
     params = urlencode(param_dict)
-    return '{authority}/common/oauth2/authorize?{params}'.format(
+    return '{authority}/{tenant_id}/oauth2/v2.0/authorize?{params}'.format(
         authority=authority,
+        tenant_id=TENANT_ID,
         params=params,
     )
 
