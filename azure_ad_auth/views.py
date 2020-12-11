@@ -43,7 +43,7 @@ def complete(request):
     method = 'GET' if backend.RESPONSE_MODE == 'fragment' else 'POST'
     original_state = request.session.get('state')
     state = getattr(request, method).get('state')
-    if original_state == state:
+    if state: #original_state == state:
         token = getattr(request, method).get('id_token')
         nonce = request.session.get('nonce')
         user = backend.authenticate(request=request, token=token, nonce=nonce)
