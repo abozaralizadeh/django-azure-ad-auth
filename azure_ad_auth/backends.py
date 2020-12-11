@@ -108,7 +108,7 @@ class AzureActiveDirectoryBackend(object):
         for user_field, token_field in self.USER_MAPPING.items():
             if token_field not in payload:
                 continue
-            user_kwargs[user_field] = payload[token_field]
+            user_kwargs[user_field] = str(payload[token_field])[:30]
 
         for user_field, val in self.USER_STATIC_MAPPING.items():
             user_kwargs[user_field] = val
