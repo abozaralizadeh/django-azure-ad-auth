@@ -89,8 +89,8 @@ def get_token_payload(token=None, audience=CLIENT_ID, nonce=None):
         try:
             payload = jwt.decode(token, key=key, audience=audience)
 
-            if payload['nonce'] != nonce:
-                pass #continue
+            #if payload['nonce'] != nonce:
+            #    continue
 
             return payload
         except (jwt.InvalidTokenError, IndexError) as e:
