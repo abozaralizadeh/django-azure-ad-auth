@@ -39,6 +39,7 @@ def get_login_url(authority=AUTHORITY, response_type=RESPONSE_TYPE, response_mod
     if always_authenticate:
         param_dict['prompt'] = 'login'
     params = urlencode(param_dict)
+    params = str(params).replace('openid', 'openid+email+profile')
     return '{authority}/{tenant_id}/oauth2/v2.0/authorize?{params}'.format(
         authority=authority,
         tenant_id=TENANT_ID,
@@ -89,7 +90,7 @@ def get_token_payload(token=None, audience=CLIENT_ID, nonce=None):
             payload = jwt.decode(token, key=key, audience=audience)
 
             if payload['nonce'] != nonce:
-                continue
+                pass #continue
 
             return payload
         except (jwt.InvalidTokenError, IndexError) as e:
