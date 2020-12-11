@@ -50,7 +50,6 @@ def complete(request):
         if user is not None:
             login(request, user)
             return HttpResponseRedirect(get_login_success_url(request))
-    print("Log: nonce=" + nonce + "original_state=" + original_state)
     return HttpResponseRedirect('failure')
 
 
