@@ -102,8 +102,10 @@ class AzureActiveDirectoryBackend(object):
         username_field = getattr(self.User, 'USERNAME_FIELD', 'username')
         email = user_kwargs.get('email', None)
 
-        if username_field and username_field != 'email' and email:
-            user_kwargs[username_field] = self.username_generator(email)
+        #if username_field and username_field != 'email' and email:
+            #user_kwargs[username_field] = self.username_generator(email)
+
+        user_kwargs[username_field] = email.split('@')[0][:30]
 
         for user_field, token_field in self.USER_MAPPING.items():
             if token_field not in payload:
