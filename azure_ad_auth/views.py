@@ -5,7 +5,10 @@ from django import VERSION
 from django.http import HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.cache import never_cache
+from fcache.cache import FileCache
 import uuid
+
+ad_cache = FileCache('azure_ad_auth_cache', flag='c')
 
 if VERSION[0] < 2:
     from django.core.urlresolvers import reverse
@@ -28,6 +31,7 @@ def auth(request):
     request.session['nonce'] = nonce
     state = str(uuid.uuid4())
     request.session['state'] = state
+    ad_cache[state] = nonce
     login_url = backend.login_url(
         redirect_uri=redirect_uri,
         nonce=nonce,
@@ -43,9 +47,13 @@ def complete(request):
     method = 'GET' if backend.RESPONSE_MODE == 'fragment' else 'POST'
     original_state = request.session.get('state')
     state = getattr(request, method).get('state')
-    if state: #original_state == state:
+    nonce = ad_cache[state]
+    if nonce:
+        original_state = state
+    if original_state == state:
         token = getattr(request, method).get('id_token')
-        nonce = request.session.get('nonce')
+        if not nonce:
+            nonce = request.session.get('nonce')
         user = backend.authenticate(request=request, token=token, nonce=nonce)
         if user is not None:
             login(request, user)
