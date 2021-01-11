@@ -88,7 +88,7 @@ def get_token_payload(token=None, audience=CLIENT_ID, nonce=None):
     for key in get_public_keys():
         try:
             payload = jwt.decode(token, key=key, audience=audience)
-
+            print(payload)
             if payload['nonce'] != nonce:
                 continue
 
