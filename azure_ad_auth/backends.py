@@ -49,7 +49,8 @@ class AzureActiveDirectoryBackend(object):
         email = get_token_payload_email(payload, self.EMAIL_FIELD)
 
         if email is None:
-            logger.error(self.EMAIL_FIELD + 'field not found!')
+            logger.error(self.EMAIL_FIELD + ' field not found!')
+            logger.error('Payload: ' + payload)
             return None
 
         email = email.lower()
