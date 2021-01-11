@@ -85,6 +85,9 @@ def get_public_keys():
 
 
 def get_token_payload(token=None, audience=CLIENT_ID, nonce=None):
+    print('keys: ' + str(get_public_keys()))
+    print('Token: ' + token)
+    print('Nonce: ' + nonce)
     for key in get_public_keys():
         try:
             payload = jwt.decode(token, key=key, audience=audience)
@@ -95,10 +98,7 @@ def get_token_payload(token=None, audience=CLIENT_ID, nonce=None):
             return payload
         except (jwt.InvalidTokenError, IndexError) as e:
             pass
-
-    print('keys: ' + str(get_public_keys()))
-    print('Token: ' + token)
-    print('Nonce: ' + nonce)
+        
     return None
 
 
