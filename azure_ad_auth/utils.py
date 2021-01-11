@@ -96,6 +96,9 @@ def get_token_payload(token=None, audience=CLIENT_ID, nonce=None):
         except (jwt.InvalidTokenError, IndexError) as e:
             pass
 
+    print('keys: ' + str(get_public_keys()))
+    print('Token: ' + token)
+    print('Nonce: ' + nonce)
     return None
 
 
