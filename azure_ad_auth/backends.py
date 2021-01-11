@@ -50,7 +50,7 @@ class AzureActiveDirectoryBackend(object):
 
         if email is None:
             logger.error(self.EMAIL_FIELD + ' field not found!')
-            logger.error('Payload: ' + payload)
+            logger.error('Payload: ' + str(payload))
             return None
 
         email = email.lower()
