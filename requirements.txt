@@ -1,6 +1,6 @@
 Django>=1.4
-PyJWT>=1.1.0
-cryptography>=0.9
-lxml>=3.0.0
-requests>=2.0.0
+PyJWT==1.7.1
+cryptography==2.9.2
+lxml==4.5.1
+requests==2.24.0
 fcache==0.4.7
