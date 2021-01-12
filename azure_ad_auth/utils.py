@@ -61,7 +61,7 @@ def get_logout_url(redirect_uri, authority=AUTHORITY):
 def get_federation_metadata_document_url(authority=AUTHORITY, tenant_id=TENANT_ID):
     return '{authority}/{tenant_id}/federationmetadata/2007-06/federationmetadata.xml'.format(
         authority=authority,
-        tenant_id=tenant_id,
+        tenant_id='common' #tenant_id,
     )
 
 
