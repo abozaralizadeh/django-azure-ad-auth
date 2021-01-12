@@ -1,3 +1,4 @@
+import logging
 from base64 import b64decode
 from cryptography.hazmat.backends import default_backend
 from cryptography.x509 import load_der_x509_certificate
@@ -12,6 +13,7 @@ except ImportError:
     # Python 2
     from urllib import urlencode
 
+logger = logging.getLogger('Azure AD Auth')
 
 AUTHORITY = getattr(settings, 'AAD_AUTHORITY', 'https://login.microsoftonline.com')
 SCOPE = getattr(settings, 'AAD_SCOPE', 'openid')
@@ -85,18 +87,19 @@ def get_public_keys():
 
 
 def get_token_payload(token=None, audience=CLIENT_ID, nonce=None):
-    print('keys: ' + str(get_public_keys()))
-    print('Token: ' + token)
-    print('Nonce: ' + nonce)
+    logger.error('keys: ' + str(get_public_keys()))
+    logger.error('Token: ' + token)
+    logger.error('Nonce: ' + nonce)
     for key in get_public_keys():
         try:
             payload = jwt.decode(token, key=key, audience=audience)
-            print(payload)
+            logger.error('payload' + str(payload))
             if payload['nonce'] != nonce:
                 continue
-
+            logger.error('Nonce Found!')
             return payload
         except (jwt.InvalidTokenError, IndexError) as e:
+            logger.error('InvalidTokenError')
             pass
         
     return None
